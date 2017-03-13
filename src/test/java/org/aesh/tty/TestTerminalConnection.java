@@ -24,6 +24,7 @@ import org.aesh.readline.Prompt;
 import org.aesh.readline.Readline;
 import org.aesh.readline.TestTerminal;
 import org.aesh.tty.terminal.TerminalConnection;
+import org.jline.terminal.Terminal;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -98,7 +99,7 @@ public class TestTerminalConnection {
         outputStream.write(("FOO").getBytes());
         outputStream.flush();
         Thread.sleep(100);
-        connection.getTerminal().raise(Signal.INT);
+        connection.getTerminal().raise(Terminal.Signal.INT);
         connection.close();
 
         Assert.assertEquals(new String(out.toByteArray()), "FOO^C"+ Config.getLineSeparator());
@@ -131,7 +132,7 @@ public class TestTerminalConnection {
         readline.readline(connection, new Prompt(""), s -> {  });
         outputStream.write(("FOO").getBytes());
         outputStream.flush();
-        connection.getTerminal().raise(Signal.INT);
+        connection.getTerminal().raise(Terminal.Signal.INT);
         Thread.sleep(250);
 
         assertEquals(new String(out.toByteArray()), "GAH"+Config.getLineSeparator()+"FOOBAR"+ Config.getLineSeparator());

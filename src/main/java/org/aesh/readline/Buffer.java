@@ -24,7 +24,7 @@ import org.aesh.util.IntArrayBuilder;
 import org.aesh.util.ANSI;
 import org.aesh.util.LoggerUtil;
 import org.aesh.util.Parser;
-import org.aesh.util.WcWidth;
+import org.jline.utils.WCWidth;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -201,7 +201,7 @@ public class Buffer {
    }
 
     private void doInsert(int data) {
-        int width = WcWidth.width(data);
+        int width = WCWidth.wcwidth(data);
         if(width == -1) {
             //todo: handle control chars...
         }
@@ -219,7 +219,7 @@ public class Buffer {
     private void doInsert(int[] data) {
         boolean gotControlChar = false;
         for (int aData : data) {
-            int width = WcWidth.width(aData);
+            int width = WCWidth.wcwidth(aData);
             if (width == -1) {
                 gotControlChar = true;
                 //todo: handle control chars...

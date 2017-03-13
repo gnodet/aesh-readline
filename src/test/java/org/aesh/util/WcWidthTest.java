@@ -19,6 +19,7 @@
  */
 package org.aesh.util;
 
+import org.jline.utils.WCWidth;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -29,14 +30,14 @@ public class WcWidthTest {
 
     @Test
     public void testWidth() {
-        assertEquals(1, WcWidth.width('æ'));
-        assertEquals(1, WcWidth.width('s'));
-        assertEquals(1, WcWidth.width('h'));
-        assertEquals(0, WcWidth.width('\0'));
-        assertEquals(-1, WcWidth.width('\n'));
-        assertEquals(-1, WcWidth.width('\r'));
-        assertEquals(-1, WcWidth.width('\t'));
-        assertEquals(-1, WcWidth.width('\u001B'));
+        assertEquals(1, WCWidth.wcwidth('æ'));
+        assertEquals(1, WCWidth.wcwidth('s'));
+        assertEquals(1, WCWidth.wcwidth('h'));
+        assertEquals(0, WCWidth.wcwidth('\0'));
+        assertEquals(-1, WCWidth.wcwidth('\n'));
+        assertEquals(-1, WCWidth.wcwidth('\r'));
+        assertEquals(-1, WCWidth.wcwidth('\t'));
+        assertEquals(-1, WCWidth.wcwidth('\u001B'));
     }
 
 }

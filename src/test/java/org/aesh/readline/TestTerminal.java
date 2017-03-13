@@ -19,9 +19,9 @@
  */
 package org.aesh.readline;
 
-import org.aesh.terminal.Terminal;
-import org.aesh.terminal.impl.LineDisciplineTerminal;
 import org.aesh.tty.terminal.TerminalConnection;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.impl.LineDisciplineTerminal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

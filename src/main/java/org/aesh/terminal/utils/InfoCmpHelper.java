@@ -19,9 +19,11 @@
  */
 package org.aesh.terminal.utils;
 
-import org.aesh.tty.Capability;
 import org.aesh.util.Config;
 import org.aesh.util.Parser;
+import org.jline.utils.Curses;
+import org.jline.utils.InfoCmp;
+import org.jline.utils.InfoCmp.Capability;
 
 import java.io.StringWriter;
 import java.util.HashMap;

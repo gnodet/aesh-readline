@@ -21,14 +21,14 @@ package org.aesh.tty.terminal;
 
 import org.aesh.io.Decoder;
 import org.aesh.io.Encoder;
-import org.aesh.terminal.Attributes;
-import org.aesh.terminal.Terminal;
-import org.aesh.terminal.TerminalBuilder;
 import org.aesh.tty.Capability;
 import org.aesh.tty.Connection;
 import org.aesh.tty.Signal;
 import org.aesh.tty.Size;
 import org.aesh.util.LoggerUtil;
+import org.jline.terminal.Attributes;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,8 +64,7 @@ public class TerminalConnection implements Connection {
 
     public TerminalConnection(InputStream inputStream, OutputStream outputStream) throws IOException {
             init(TerminalBuilder.builder()
-                    .input(inputStream)
-                    .output(outputStream)
+                    .streams(inputStream, outputStream)
                     .nativeSignals(true)
                     .name("Aesh console")
                     .build());
@@ -82,9 +81,9 @@ public class TerminalConnection implements Connection {
     private void init(Terminal term) {
         this.terminal = term;
         //interrupt signal
-        this.terminal.handle(Signal.INT, s -> {
+        this.terminal.handle(org.jline.terminal.Terminal.Signal.INT, s -> {
             if(getSignalHandler() != null) {
-                getSignalHandler().accept(s);
+                getSignalHandler().accept(Signal.valueOf(s.name()));
             }
             else {
                 LOGGER.log(Level.FINE, "No signal handler is registered, lets stop");
@@ -92,7 +91,7 @@ public class TerminalConnection implements Connection {
             }
         });
         //window resize signal
-        this.terminal.handle(Signal.WINCH, s -> {
+        this.terminal.handle(org.jline.terminal.Terminal.Signal.WINCH, s -> {
             if(getSizeHandler() != null) {
                 getSizeHandler().accept(size());
             }
@@ -100,6 +99,9 @@ public class TerminalConnection implements Connection {
 
         decoder = new Decoder(512, Charset.defaultCharset(), inputHandler);
         stdOut = new Encoder(Charset.defaultCharset(), this::write);
+
+        if(attributes == null)
+            attributes = terminal.enterRawMode();
     }
 
     @Override
@@ -121,7 +123,7 @@ public class TerminalConnection implements Connection {
 
     @Override
     public boolean put(Capability capability, Object... params) {
-        return terminal.puts(capability, params);
+        return terminal.puts(org.jline.utils.InfoCmp.Capability.valueOf(capability.name()), params);
     }
 
     /**
@@ -129,11 +131,16 @@ public class TerminalConnection implements Connection {
      */
     @Override
     public void openBlocking() {
+        openBlocking(null);
+    }
+
+    public void openBlocking(String buffer) {
         try {
             reading = true;
             byte[] bBuf = new byte[1024];
-            if(attributes == null)
-                attributes = terminal.enterRawMode();
+            if (buffer != null) {
+                decoder.write(buffer.getBytes());
+            }
             while (reading) {
                 int read = terminal.input().read(bBuf);
                 if (read > 0) {
@@ -206,7 +213,8 @@ public class TerminalConnection implements Connection {
 
     @Override
     public Size size() {
-        return terminal.getSize();
+        org.jline.terminal.Size sz = terminal.getSize();
+        return new Size(sz.getColumns(), sz.getRows());
     }
 
     @Override

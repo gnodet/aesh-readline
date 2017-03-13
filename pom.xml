@@ -32,7 +32,7 @@
 
    <groupId>org.aesh</groupId>
    <artifactId>aesh-readline</artifactId>
-   <packaging>jar</packaging>
+   <packaging>bundle</packaging>
    <version>1.0-CR12-SNAPSHOT</version>
    <name>Æsh Readline</name>
    <description>Æsh (Another Extendable SHell) Readline API</description>
@@ -71,6 +71,12 @@
          <artifactId>jansi</artifactId>
          <version>1.11</version>
       </dependency>
+      <dependency>
+         <groupId>org.jline</groupId>
+         <artifactId>jline-terminal</artifactId>
+         <version>3.2.0</version>
+         <scope>provided</scope>
+      </dependency>
 
       <dependency>
          <groupId>junit</groupId>
@@ -99,6 +105,19 @@
                   <include>**/*TestCase.java</include>
                   <include>**/*Test.java</include>
                </includes>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>maven-bundle-plugin</artifactId>
+            <extensions>true</extensions>
+            <configuration>
+               <instructions>
+                  <Export-Package>
+                     org.aesh.*,
+                     org.jline.*
+                  </Export-Package>
+               </instructions>
             </configuration>
          </plugin>
          <plugin>

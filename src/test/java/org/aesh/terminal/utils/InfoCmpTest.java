@@ -19,8 +19,9 @@
  */
 package org.aesh.terminal.utils;
 
-import org.aesh.tty.Capability;
 import org.aesh.util.Config;
+import org.jline.utils.InfoCmp;
+import org.jline.utils.InfoCmp.Capability;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -38,36 +39,36 @@ import static org.junit.Assert.assertTrue;
 public class InfoCmpTest {
 
     @Test
-    public void testANSI() {
+    public void testANSI() throws Exception {
         Set<Capability> bools = new HashSet<>();
         Map<Capability, Integer> ints = new HashMap<>();
         Map<Capability, String> strings = new HashMap<>();
 
-        String infocmp = InfoCmp.getDefaultInfoCmp("xterm");
+        String infocmp = InfoCmp.getInfoCmp("xterm");
         InfoCmp.parseInfoCmp(infocmp, bools, ints, strings);
         assertEquals(24, ints.get(Capability.lines).intValue());
         assertEquals(80, ints.get(Capability.columns).intValue());
 
         assertEquals(5, ints.size());
         assertEquals(8, bools.size());
-        assertEquals(166, strings.size());
+        assertEquals(167, strings.size());
         assertTrue(strings.containsKey(Capability.byName("kf29")));
     }
 
     @Test
-    public void testWindows() {
+    public void testWindows() throws Exception {
         Set<Capability> bools = new HashSet<>();
         Map<Capability, Integer> ints = new HashMap<>();
         Map<Capability, String> strings = new HashMap<>();
 
-        String infocmp = InfoCmp.getDefaultInfoCmp("Windows");
+        String infocmp = InfoCmp.getInfoCmp("windows");
         InfoCmp.parseInfoCmp(infocmp, bools, ints, strings);
         assertEquals(24, ints.get(Capability.lines).intValue());
         assertEquals(64, ints.get(Capability.max_pairs).intValue());
 
         assertEquals(6, ints.size());
         assertEquals(4, bools.size());
-        assertEquals(58, strings.size());
+        assertEquals(59, strings.size());
         assertTrue(strings.containsKey(Capability.byName("smso")));
     }
 
